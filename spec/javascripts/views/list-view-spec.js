@@ -5,7 +5,7 @@ describe( "ListView", function() {
   beforeEach( function() {
     loadFixtures( "list.html" );
     contacts = new ContactList.ContactCollection();
-    view = new ContactList.ListView({ model: contacts, el: $("#contact-list") });
+    view     = new ContactList.ListView({ model: contacts, el: $("#contact-list") });
 
     // Over-ride the template from the fixture
     view.template = $("#list-template").html();
@@ -21,7 +21,7 @@ describe( "ListView", function() {
     });
   });
 
-  describe( "when the collection adds an element", function() {
+  describe( "collection event:", function() {
     var newContact;
     var contactView;
 
@@ -38,17 +38,18 @@ describe( "ListView", function() {
       view.render();
     });
 
-    it( "creates a ContactView for the new element", function() {
-      contacts.trigger( 'add', newContact );
+    describe( "on add", function() {
+      it( "creates a ContactView for the new element", function() {
+        contacts.trigger( 'add', newContact );
 
-      expect( ContactList.ContactView ).toHaveBeenCalledWith({ model: newContact });
-    });
+        expect( ContactList.ContactView ).toHaveBeenCalledWith({ model: newContact });
+      });
 
-    it( "adds the ContactView's content to its own element", function() {
-      contacts.trigger( 'add', newContact );
+      it( "adds the ContactView's content to its own element", function() {
+        contacts.trigger( 'add', newContact );
 
-      console.log( $("div.js-contact-list"));
-      expect( $("div.js-contact-list p") ).toBeVisible();
+        expect( $("div.js-contact-list p") ).toBeVisible();
+      });
     });
   });
 });
