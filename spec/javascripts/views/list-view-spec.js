@@ -25,6 +25,7 @@ describe( "ListView", function() {
 
     beforeEach( function() {
       newContact = { name: 'Bob' };
+      _.extend( newContact, Backbone.Events );
     });
 
     it( "creates a ContactView for the new element", function() {
