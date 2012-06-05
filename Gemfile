@@ -7,7 +7,10 @@ gem 'sinatra-contrib'
 gem 'thin'
 gem 'faker'
 
-group :development do
+group :development, :test do
+  gem 'foreman'
+
+  gem 'growl'
   gem 'guard', '~> 1.1.0'
   gem 'guard-bundler'
   gem 'guard-shell'
