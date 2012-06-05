@@ -22,10 +22,13 @@ describe( "ListView", function() {
 
   describe( "when the collection adds an element", function() {
     var newContact;
+    var contactView;
 
     beforeEach( function() {
       newContact = { name: 'Bob' };
       _.extend( newContact, Backbone.Events );
+
+      contactView = jasmine.createSpyObj( "contactView", ["render"] );
     });
 
     it( "creates a ContactView for the new element", function() {
@@ -34,6 +37,15 @@ describe( "ListView", function() {
       contacts.trigger( 'add', newContact );
 
       expect( ContactList.ContactView ).toHaveBeenCalledWith({ model: newContact });
+    });
+
+    it( "adds the ContactView's content to its own element", function() {
+      contactView.el = $("<p>Contact!</p>");
+      contactView.render.andReturn( contactView );
+
+      contacts.trigger( 'add', newContact );
+
+      expect( $("div.js-contact-list>p") ).toBeVisible();
     });
   });
 });
