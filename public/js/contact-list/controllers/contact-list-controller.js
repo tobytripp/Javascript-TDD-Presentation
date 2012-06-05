@@ -1,5 +1,6 @@
 ;(function($) {
   ContactList.ContactListController = function( el ) {
-    new ContactList.ContactCollection();
+    this.collection = new ContactList.ContactCollection();
+    new ContactList.ListView({ model: this.collection, el: el });
   }
 }(undefined)); // Disallow jQuery access...
