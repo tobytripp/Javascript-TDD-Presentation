@@ -3,4 +3,4 @@
     url: "/contacts",
     model: ContactList.Contact,
   });
-}(jQuery));
+}(undefined));
