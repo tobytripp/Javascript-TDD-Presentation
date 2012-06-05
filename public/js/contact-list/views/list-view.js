@@ -1,18 +1,19 @@
 ;(function($) {
   ContactList.ListView = Backbone.View.extend({
-    template: $("#list-template").html(),
+    className: "js-contact-list",
 
     initialize: function( options ) {
       this.model.on( 'add', this.addOne, this );
     },
 
     render: function() {
-      this.$el.html( this.template );
+      this.$el.addClass( this.className );
       return this;
     },
 
     addOne: function( contact ) {
-      new ContactList.ContactView({ model: contact });
+      var view = new ContactList.ContactView({ model: contact });
+      this.$el.append( view.render().el );
     }
   });
 }(jQuery));

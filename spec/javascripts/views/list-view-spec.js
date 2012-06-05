@@ -6,12 +6,13 @@ describe( "ListView", function() {
     loadFixtures( "list.html" );
     contacts = new ContactList.ContactCollection();
     view = new ContactList.ListView({ model: contacts, el: $("#contact-list") });
+
+    // Over-ride the template from the fixture
+    view.template = $("#list-template").html();
   });
 
   describe( "#render", function() {
     beforeEach( function() {
-      // Over-ride the template from the fixture
-      view.template = $("#list-template").html();
       view.render();
     });
 
@@ -29,23 +30,25 @@ describe( "ListView", function() {
       _.extend( newContact, Backbone.Events );
 
       contactView = jasmine.createSpyObj( "contactView", ["render"] );
+      contactView.render.andReturn( contactView );
+      contactView.el = $("<p>Contact!</p>");
+
+      spyOn( ContactList, "ContactView" ).andReturn( contactView );
+
+      view.render();
     });
 
     it( "creates a ContactView for the new element", function() {
-      spyOn( ContactList, "ContactView" );
-
       contacts.trigger( 'add', newContact );
 
       expect( ContactList.ContactView ).toHaveBeenCalledWith({ model: newContact });
     });
 
     it( "adds the ContactView's content to its own element", function() {
-      contactView.el = $("<p>Contact!</p>");
-      contactView.render.andReturn( contactView );
-
       contacts.trigger( 'add', newContact );
 
-      expect( $("div.js-contact-list>p") ).toBeVisible();
+      console.log( $("div.js-contact-list"));
+      expect( $("div.js-contact-list p") ).toBeVisible();
     });
   });
 });
