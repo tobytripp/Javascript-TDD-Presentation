@@ -1,12 +1,11 @@
 ;(function($) {
   ContactList.ListView = Backbone.View.extend({
-    tagName:   "div",
-    className: "js-contact-list",
+    template: $("#list-template").html(),
 
     initialize: function( options ) {},
 
     render: function() {
-      this.$el.html( "<div class='js-contact-list'></div>" );
+      this.$el.html( this.template );
       return this;
     }
   });
