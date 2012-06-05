@@ -11,5 +11,4 @@ describe( "ContactList", function() {
 
     expect( ContactList.ContactListController ).toHaveBeenCalledWith( el );
   });
-
 });

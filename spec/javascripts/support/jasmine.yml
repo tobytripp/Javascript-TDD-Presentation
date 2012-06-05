@@ -13,6 +13,7 @@
 src_files:
   - public/js/lib/jquery-1.7.1.js
   - public/js/contact-list.js
+  - public/js/contact-list/**/*.js
 
 # stylesheets
 #
