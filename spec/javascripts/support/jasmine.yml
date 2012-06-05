@@ -19,6 +19,7 @@ src_files:
   - public/js/lib/mock-ajax.js
 
   - public/js/contact-list.js
+  - public/js/contact-list/models/contact.js
   - public/js/contact-list/**/*.js
 
 # stylesheets
