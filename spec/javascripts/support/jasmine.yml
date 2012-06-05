@@ -12,6 +12,8 @@
 #
 src_files:
   - public/js/lib/jquery-1.7.1.js
+  - public/js/lib/underscore.js
+  - public/js/lib/backbone.js
   - public/js/contact-list.js
   - public/js/contact-list/**/*.js
 
