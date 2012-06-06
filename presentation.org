@@ -1,0 +1,318 @@
+#+TITLE: Test-Driven Javascript with Jasmine
+#+AUTHOR: Toby Tripp
+#+EMAIL:  ttripp@backstopsolutions.com
+#+DATE:   2012-06-05 Wed
+#+EPRESENT_FRAME_LEVEL: 2
+
+* Jasmine
+
+http://pivotal.github.com/jasmine/
+
+** Plugins we'll use
+
+https://github.com/pivotal/jasmine-ajax
+https://github.com/velesin/jasmine-jquery
+
+http://backbone.js
+
+** The App We'll Write
+
+http://localhost:3000/
+
+
+* Anatomy of a Jasmine Test
+
+#+begin_src js
+  describe( "ContactList", function() {
+    it( "loads my tests", function() {
+      expect( true ).toBeTruthy();
+    });
+  });
+#+end_src
+
+** First failing spec
+
+#+begin_src js
+  // spec/javascripts/contact-list-spec.js
+  describe( "ContactList", function() {
+    it( "accepts a container element in its constructor", function() {
+      new ContactList( $("#my-contact-list") );
+    });
+  });
+#+end_src
+
+[[file:images/1-failure.png]]
+
+** Making it pass
+
+#+begin_src js
+  // js/contact-list.js
+  ;(function($) {
+    window.ContactList = function ( element ) {
+
+    }
+
+    ContactList.prototype = {
+
+    }
+  }(jQuery));
+#+end_src
+
+[[file:images/2-passing.png]]
+
+* Spies
+
+#+begin_src js
+  describe( "ContactList", function() {
+    it( "accepts a container element in its constructor", function() {
+      new ContactList( $("#my-contact-list") );
+    });
+
+    it( "creates a ContactListController with the element", function() {
+      var el = $("#my-contact-list");
+      spyOn( ContactList, "ContactListController" );
+
+      new ContactList( el );
+
+      expect( ContactList.ContactListController ).toHaveBeenCalledWith( el );
+    });
+  });
+#+end_src
+
+** Spy failure
+
+[[file:images/3-failure.png]]
+
+#+begin_src js
+  ;(function($) {
+    ContactList.ContactListController = function( el ) {
+
+    }
+  }(undefined)); // Disallow jQuery access...
+#+end_src
+
+[[file:images/4-failure.png]]
+
+** Making it pass
+
+#+begin_src js
+  ;(function($) {
+    window.ContactList = function ( element ) {
+      new ContactList.ContactListController( element );
+    }
+  }(jQuery));
+#+end_src
+
+[[file:images/5-passing.png]]
+
+* Controller
+
+** Spying on a Constructor
+#+begin_src js
+  describe( "ContactList.ContactListController", function() {
+    it( "creates a collection for the contacts", function() {
+      spyOn( ContactList, "ContactCollection" );
+      new ContactList.ContactListController();
+
+      expect( ContactList.ContactCollection ).toHaveBeenCalled();
+    });
+  });
+#+end_src
+
+** Backbone.Collection
+
+#+begin_src js
+  // js/contact-list/models/contact-collection.js
+  ;(function($) {
+    ContactList.ContactCollection = Backbone.Collection.extend({
+
+    });
+  }(jQuery));
+
+  // js/contact-list/controllers/contact-list-controller.js
+  ;(function($) {
+    ContactList.ContactListController = function( el ) {
+      new ContactList.ContactCollection();
+    }
+  }(undefined));
+#+end_src
+
+* View
+
+** jasmine-jquery
+
+#+begin_src js
+  describe( "ListView", function() {
+    var view;
+
+    describe( "#render", function() {
+      beforeEach( function() {
+        jasmine.getFixtures().set( "<div id='contact-list'></div>" );
+        var contacts = new ContactList.ContactCollection();
+        view = new ContactList.ListView({
+          model: contacts,
+          el: $("#contact-list")
+        });
+
+        view.render();
+      });
+
+      it( "creates a div container", function() {
+        expect( $("div.js-contact-list") ).toBeVisible();
+      });
+    });
+  });
+#+end_src
+
+** Fail
+
+[[file:images/6-failing.png]]
+
+** Make it pass
+
+#+begin_src js
+  ;(function($) {
+    ContactList.ListView = Backbone.View.extend({
+      tagName:   "div",
+      className: "js-contact-list",
+
+      initialize: function( options ) {},
+
+      render: function() {
+        this.$el.html( "<div class='js-contact-list'></div>" );
+        return this;
+      }
+    });
+  }(jQuery));
+#+end_src
+
+** Passing
+
+[[file:images/7-passing.png]]
+
+* Templates and Fixtures
+
+** A More Robust View
+
+#+begin_src html
+  <script type="text/template" id="list-template">
+    <div class="js-contact-list"></div>
+  </script>
+#+end_src
+#+begin_src js
+  ;(function($) {
+    ContactList.ListView = Backbone.View.extend({
+      template: $("#list-template").html(),
+
+      initialize: function( options ) {},
+
+      render: function() {
+        this.$el.html( this.template );
+        return this;
+      }
+    });
+  }(jQuery));
+#+end_src
+
+* More Spies
+
+** Spy Objects
+
+#+begin_src js
+  describe( "ListView", function() {
+    describe( "when the collection adds an element", function() {
+      var newContact;
+      var contactView;
+
+      beforeEach( function() {
+        newContact = { name: 'Bob' };
+        _.extend( newContact, Backbone.Events );
+
+        contactView = jasmine.createSpyObj( "contactView", ["render"] );
+      });
+
+      it( "adds the ContactView's content to its own element", function() {
+        contactView.el = $("<p>Contact!</p>");
+        contactView.render.andReturn( contactView );
+
+        contacts.trigger( 'add', newContact );
+
+        expect( $("div.js-contact-list p") ).toBeVisible();
+      });
+    });
+  });
+#+end_src
+
+* Testing AJAX
+
+** Mock-Ajax
+
+#+begin_src js
+  describe( "ContactList.ContactCollection", function() {
+    var TestResponse = {
+      index: {
+        success: {
+          status: 200,
+          responseText: '{"contacts":[' +
+            '{"name":{"first":"Sim","last":"Wyman"},'
+            + '"url":"http://www.schaefer.biz.biz","email":"selena@sanford.info",'
+            + '"address":{"streetAddress":"4679 Leanne Branch Apt. 330",'
+            + '"city":"East Dedrick","state":"Connecticut","zip":"50962"},'
+            + '"phone":"1-237-138-5650 x1243","jabber":"aida@ondricka.biz"},' +
+            '{"name":{"first":"Flavio","last":"Hirthe"},'
+            + '"url":"http://www.andersonbahringer.info.org","email":"felix@streichwolff.info",'
+            + '"address":{"streetAddress":"5640 Anne Village Suite 123","city":"Hicklefort",'
+            + '"state":"Oklahoma","zip":"64729"},'
+            + '"phone":"1-540-742-1233 x43732","jabber":"laurine_bergnaum@murraykoch.name"}'
+            + ']}'
+        }
+      }
+    };
+
+    var collection;
+
+    beforeEach( function() {
+      jasmine.Ajax.useMock();
+
+      collection = new ContactList.ContactCollection();
+    });
+
+    describe( "#fetch", function() {
+      beforeEach( function() {
+        collection.fetch();
+
+        request = mostRecentAjaxRequest();
+        request.response( TestResponse.index.success );
+      });
+
+      it( "fetches the current contacts from the server", function() {
+        expect( collection.size() ).toEqual( 2 );
+      });
+    });
+  });
+#+end_src
+
+** Failure messages are...
+
+[[file:images/10-failing.png]]
+
+** Passes easily, however
+
+#+begin_src js
+  // js/contact-list/models/contact-collection.js
+  ContactList.ContactCollection = Backbone.Collection.extend({
+    url: "/contacts",
+    model: ContactList.Contact,
+
+    parse: function( response ) {
+      return response.contacts;
+    }
+  });
+#+end_src
+
+* Fin
+
+All Done:
+[[http:localhost:3000]]
+
+(I did skip a lot).
