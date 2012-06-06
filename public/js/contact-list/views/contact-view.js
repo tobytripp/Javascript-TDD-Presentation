@@ -1,7 +1,7 @@
 ;(function($) {
   ContactList.ContactView = Backbone.View.extend({
     tagName: "div",
-    className: "vcard",
+    className: "vcard span4",
 
     initialize: function() {
       this.template = _.template( $("#card-template").html() );

@@ -1,7 +1,7 @@
 describe( "ContactList.ContactListController", function() {
   var collection;
   beforeEach( function() {
-    collection = { name: "collection" };
+    collection = { name: "collection", fetch: function() {} };
     _.extend( collection, Backbone.Events );
     spyOn( ContactList, "ContactCollection" ).andReturn( collection );
   });
@@ -23,4 +23,10 @@ describe( "ContactList.ContactListController", function() {
     });
   });
 
+  it( "refreshes the collection from the server", function() {
+    spyOn( collection, "fetch" );
+    new ContactList.ContactListController();
+
+    expect( collection.fetch ).toHaveBeenCalled();
+  });
 });

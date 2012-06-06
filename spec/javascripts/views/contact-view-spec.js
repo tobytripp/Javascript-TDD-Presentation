@@ -22,7 +22,7 @@ describe( "ContactList.ContactView", function() {
   });
 
   it( "wraps its content in a vcard container", function() {
-    expect( $(".vcard") ).toBeVisible();
+    expect( $(".vcard.span4") ).toBeVisible();
   });
 
 

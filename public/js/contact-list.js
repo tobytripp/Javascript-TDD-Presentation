@@ -3,7 +3,7 @@
     new ContactList.ContactListController( element );
   }
 
-  ContactList.prototype = {
-
-  }
+  $(function() {
+    var app = new ContactList( $("#contact-list")[0] );
+  });
 }(jQuery));

@@ -48,23 +48,21 @@
     <script type="text/template" id="list-template"></script>
 
     <script type="text/template" id="card-template">
-      <div class="vcard span4">
-        <h2>
-          <span class="given-name"><%%= name.first %></span>
-          <span class="family-name"><%%= name.last %></span>
-        </h2>
-        <a class="email" href="mailto:<%%= email %>"><%%= email %></a>
-        <p class="tel"><%%= phone %></p>
-        <div class="adr">
-          <p class="street-address"><%%= address.streetAddress %></p>
-          <p>
-            <span class="locality"><%%= address.city %></span>
-            <span class="region"><%%= address.state %></span>
-            <span class="postal-code"><%%= address.zip %></span>
-          </p>
-        </div>
-        <a class="url" href="xmpp:<%%= jabber %>">Jabber</a>
+      <h2>
+        <span class="given-name"><%%= name.first %></span>
+        <span class="family-name"><%%= name.last %></span>
+      </h2>
+      <a class="email" href="mailto:<%%= email %>"><%%= email %></a>
+      <p class="tel"><%%= phone %></p>
+      <div class="adr">
+        <p class="street-address"><%%= address.streetAddress %></p>
+        <p>
+          <span class="locality"><%%= address.city %></span>
+          <span class="region"><%%= address.state %></span>
+          <span class="postal-code"><%%= address.zip %></span>
+        </p>
       </div>
+      <a class="url" href="xmpp:<%%= jabber %>">Jabber: <%%= jabber %></a>
     </script>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -74,11 +72,11 @@
     <script src="js/lib/underscore.js" type="text/javascript"></script>
     <script src="js/lib/backbone.js" type="text/javascript"></script>
 
-    <script src="js/contacts.js" type="text/javascript"></script>
-    <script src="/js/contacts/models/contact.js" type="text/javascript"></script>
-    <script src="/js/contacts/models/contact-list.js" type="text/javascript"></script>
-    <script src="/js/contacts/views/contact-view.js" type="text/javascript"></script>
-    <script src="/js/contacts/views/contact-list-view.js" type="text/javascript"></script>
-    <script src="/js/contacts/controllers/contacts_controller.js" type="text/javascript"></script>
+    <script src="/js/contact-list.js" type="text/javascript"></script>
+    <script src="/js/contact-list/models/contact.js" type="text/javascript"></script>
+    <script src="/js/contact-list/models/contact-collection.js" type="text/javascript"></script>
+    <script src="/js/contact-list/views/contact-view.js" type="text/javascript"></script>
+    <script src="/js/contact-list/views/list-view.js" type="text/javascript"></script>
+    <script src="/js/contact-list/controllers/contact-list-controller.js" type="text/javascript"></script>
   </body>
 </html>
