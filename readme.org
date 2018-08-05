@@ -6,7 +6,7 @@
 
 * Jasmine
 
-http://pivotal.github.com/jasmine/
+https://jasmine.github.io/
 
 ** Plugins we'll use
 
